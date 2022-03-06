@@ -5,10 +5,7 @@
 
 #include "HRSLinearSearch.h"
 #include "Image.h"
-#include <cstddef>
-#include <iostream>
-
-
+#include "VectorImage.h"
 //------------------------------------------------------------------------
 // HRSLinearSearch::HRSLinearSearch
 //------------------------------------------------------------------------
@@ -18,18 +15,15 @@ HRSLinearSearch::HRSLinearSearch()
   // private member variable already initialized by its own class
 }
 
-
 //------------------------------------------------------------------------
 // HRSLinearSearch::train
 //------------------------------------------------------------------------
 // Train the HRS. For HRSLinearSearch
-void HRSLinearSearch::train( const Vector<Image>& vec )
+void HRSLinearSearch::train( const VectorImage& vec )
 {
   // uses operator = overload to copy data from vec
-  m_Lvector = vec;
+  m_Ivector = vec;
 }
-
-
 //------------------------------------------------------------------------
 // HRSLinearSearch::classify
 //------------------------------------------------------------------------
@@ -39,5 +33,5 @@ void HRSLinearSearch::train( const Vector<Image>& vec )
 Image HRSLinearSearch::classify( const Image& img )
 {
   // calls find_closest to do a linear search
-  return m_Lvector.find_closest( img, distance_euclidean );
+  return m_Ivector.find_closest( img );
 }

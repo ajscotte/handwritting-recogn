@@ -1,5 +1,5 @@
 //========================================================================
-// IHRS.h
+// IHandwritingRecSys.h
 //========================================================================
 // Declarations for the interfeace class for the handwriting recognition
 // systems.
@@ -19,9 +19,7 @@
 // - longer compilation time
 
 class Image;
-
-template <typename T>
-class Vector;
+class VectorImage;
 
 //------------------------------------------------------------------------
 // IHandwritingRecSys
@@ -29,13 +27,14 @@ class Vector;
 // Abstract base class for handwriting recognition systems (HRS)
 //
 // - train   : Train the HRS with a vector of labeled images
-// - classify: Classify an image and return a label
+// - classify: Classify an image and return the image that has the minimal
+//             Euclidean distance to the given image.
 //
 
 class IHandwritingRecSys {
- public:
-  virtual void  train( const Vector<Image>& v ) = 0;
-  virtual Image classify( const Image& image )  = 0;
+public:
+  virtual void  train( const VectorImage& v )  = 0;
+  virtual Image classify( const Image& image ) = 0;
 };
 
 #endif  // IHRS_H

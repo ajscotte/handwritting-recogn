@@ -21,36 +21,6 @@
 
 typedef unsigned int uint_t;
 
-// Define aliases for integer free function types
-typedef bool ( *IntCmpFuncType )( int, int );
-typedef size_t ( *IntDistFuncType )( int, int );
-typedef size_t ( *IntHashFuncType )( int );
-
-//========================================================================
-// Utility free functions
-//========================================================================
-
-//------------------------------------------------------------------------
-// less
-//------------------------------------------------------------------------
-// Return true if a is strictly less than b; false otherwise.
-
-bool less( int a, int b );
-
-//------------------------------------------------------------------------
-// distance
-//------------------------------------------------------------------------
-// Return the distance between the two given objects.
-
-size_t distance( int a, int b );
-
-//------------------------------------------------------------------------
-// hash
-//------------------------------------------------------------------------
-// Return a hash value of the given integer.
-
-size_t hash( int a );
-
 //========================================================================
 // ECE2400_CHECK_* macros
 //========================================================================
@@ -180,6 +150,13 @@ size_t hash( int a );
 
 #endif  // #ifndef EVAL
 
+//------------------------------------------------------------------------
+// distance
+//------------------------------------------------------------------------
+// Return the distance between the two given integers.
+
+uint_t distance( int a, int b );
+
 namespace ece2400 {
 
 extern const double million;
@@ -228,13 +205,13 @@ class Exception {
 // Exception for out of range access.
 
 class OutOfRange : Exception {
- public:
+public:
   OutOfRange();
   OutOfRange( const char* err_msg );
 
   std::string to_str() const;
 
- private:
+private:
   std::string m_err_msg;
 };
 
@@ -244,22 +221,15 @@ class OutOfRange : Exception {
 // Exception for out of range access.
 
 class InvalidArgument : Exception {
- public:
+public:
   InvalidArgument();
   InvalidArgument( const char* err_msg );
 
   std::string to_str() const;
 
- private:
+private:
   std::string m_err_msg;
 };
-
-//------------------------------------------------------------------------
-// log2
-//------------------------------------------------------------------------
-// Return nearest log base 2.
-
-int log2( int x );
 
 //------------------------------------------------------------------------
 // print_array
@@ -304,7 +274,5 @@ void __check_and_print_double_binop( const char*, int, const char*,
                                      const char* );
 
 }  // namespace ece2400
-
-#include "ece2400-stdlib.inl"
 
 #endif  // ECE2400_STDLIB_H

@@ -9,8 +9,7 @@
 #ifndef MNIST_UTILS_H
 #define MNIST_UTILS_H
 
-#include "Image.h"
-#include "Vector.h"
+#include "VectorImage.h"
 #include <cstddef>
 #include <string>
 
@@ -19,11 +18,11 @@ class IHandwritingRecSys;
 //------------------------------------------------------------------------
 // read_labeled_images
 //------------------------------------------------------------------------
-// Reads the images and labels file and fills a Vector<Image> with the
+// Reads the images and labels file and fills a VectorImage with the
 // corresponding labeled images.
 
 void read_labeled_images( const std::string& images_path,
-                          const std::string& labels_path, Vector<Image>& vec,
+                          const std::string& labels_path, VectorImage& vec,
                           size_t size );
 
 //------------------------------------------------------------------------
@@ -34,8 +33,8 @@ void read_labeled_images( const std::string& images_path,
 // inference set, and then checks how many classifications are correct,
 // returning the accuracy as a double.
 
-double train_and_classify( IHandwritingRecSys& hrs, Vector<Image>& v_train,
-                           Vector<Image>& v_test );
+double train_and_classify( IHandwritingRecSys& hrs, VectorImage& v_train,
+                           VectorImage& v_test );
 
 //------------------------------------------------------------------------
 // classify_with_progress_bar
@@ -44,6 +43,6 @@ double train_and_classify( IHandwritingRecSys& hrs, Vector<Image>& v_train,
 // testing set and prints a progress bar.
 
 double classify_with_progress_bar( IHandwritingRecSys& hrs,
-                                   Vector<Image>&      v_test );
+                                   VectorImage&        v_test );
 
 #endif  // MNIST_UTILS_H

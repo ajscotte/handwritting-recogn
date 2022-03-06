@@ -1,30 +1,26 @@
 //========================================================================
 // HRSBinarySearch.cc
 //========================================================================
-// Handwritten recognition system that uses binary search.
+// Handwritten recognition system that uses linear search.
 
 #include "HRSBinarySearch.h"
 #include "IHandwritingRecSys.h"
 #include "Image.h"
-#include "Vector.h"
+#include "VectorImage.h"
 #include <cstddef>
-#include <iostream>
-//#define K 1000
-
-
-
+#define K 100
 //------------------------------------------------------------------------
-// HRSBinarySearch::Search
+// Search
 //------------------------------------------------------------------------
 // Linear search part for BinarySearch
 // seaches K/2 indexes forward and backwards
 // from the midpoint selected in the vector
-const Image& Search( const Image& img, const Vector<Image>& vec, size_t begin,
-                     size_t end, int K )
+const Image& Search( const Image& img, const VectorImage& vec, size_t begin,
+                     size_t end )
 {
-  uint_t difference = distance_euclidean( vec[0], img );
+  uint_t difference = distance( vec[0], img );
   int    begin1     = begin;
-  int    end1       = (int) end;
+  int    end1       = end;
   int    idx        = 0;
 
   // iterates over vector from a midpoint in two directions to find the closest
@@ -34,7 +30,7 @@ const Image& Search( const Image& img, const Vector<Image>& vec, size_t begin,
     // reachable
     if ( i < end1 ) {
       // compares to see if current image is closer to img than the last image
-      uint_t compare1 = distance_euclidean( vec[i], img );
+      uint_t compare1 = distance( vec[i], img );
       // replaces index of closest value when new value is found
       if ( difference > compare1 ) {
         difference = compare1;
@@ -45,7 +41,7 @@ const Image& Search( const Image& img, const Vector<Image>& vec, size_t begin,
     // reachable
     if ( ( 2 * begin1 - i ) >= 0 ) {
       // compares to see if current image is closer to img than the last image
-      uint_t compare2 = distance_euclidean( vec[2 * begin1 - i], img );
+      uint_t compare2 = distance( vec[2 * begin1 - i], img );
       // replaces index of closest value when new value is found
       if ( difference > compare2 ) {
         difference = compare2;
@@ -56,21 +52,18 @@ const Image& Search( const Image& img, const Vector<Image>& vec, size_t begin,
   // returns appropriate value
   return vec[idx];
 }
-
-
-
 //------------------------------------------------------------------------
-// HRSBinarySearch::binarySearch_h
+// binarySearch_h
 //------------------------------------------------------------------------
 // binary search helper function that carries out the recursive search
-const Image& binarySearch_h( const Image& image, const Vector<Image>& vec,
-                             size_t begin, size_t end, const size_t absoluteEnd,
-                             int K )
+const Image& binarySearch_h( const Image& image, const VectorImage& vec,
+                             size_t begin, size_t end,
+                             const size_t absoluteEnd )
 {
   size_t mid = ( ( end - begin ) / 2 ) + begin;
   // base case when size is zero or 1
   if ( ( end - begin ) == 1 || ( end - begin ) == 0 ) {
-    return Search( image, vec, begin, absoluteEnd, K );
+    return Search( image, vec, begin, absoluteEnd );
   }
 
   // gets the intensity values for comparison for the image
@@ -82,52 +75,44 @@ const Image& binarySearch_h( const Image& image, const Vector<Image>& vec,
   // image intensity search the upper partition of the sorted ImageVector
   // based on the midpoint
   if ( intensityMid <= intensity ) {
-    return binarySearch_h( image, vec, mid, end, absoluteEnd, K );
+    return binarySearch_h( image, vec, mid, end, absoluteEnd );
   }
 
   // otherwise search the bottom part of the partition based on the midpoint
   else {
-    return binarySearch_h( image, vec, begin, mid, absoluteEnd, K );
+    return binarySearch_h( image, vec, begin, mid, absoluteEnd );
   }
 }
-
-
 
 //------------------------------------------------------------------------
 // HRSBinarySearch::HRSBinarySearch()
 //------------------------------------------------------------------------
 // Default constructor for HRSBinarySearch.
-HRSBinarySearch::HRSBinarySearch( unsigned int K )
+HRSBinarySearch::HRSBinarySearch()
 {
-  m_k = K;
+  // private member variable already constructed based on its own class
 }
-
-
-
 //------------------------------------------------------------------------
 // HRSBinarySearch::train
 //------------------------------------------------------------------------
 // Train the HRS. For HRSBinarySearch, stores a copy of the vector
 // that contains the training images (vec), and then sorts the training images
 // based on intensity.
-void HRSBinarySearch::train( const Vector<Image>& vec )
+void HRSBinarySearch::train( const VectorImage& vec )
 {
   // uses operator = overload to stor vec values in private member variable
   m_Bvector = vec;
   // sorts the vector based off image intensity to be used in binary search
-  m_Bvector.sort( less_intensity );
+  m_Bvector.sort();
 }
-
-
-
 //------------------------------------------------------------------------
 // HRSBinarySearch::classify
 //------------------------------------------------------------------------
 // Calls the binarySearch helper function to allow for binary search
 // based on initial input parameters
-Image HRSBinarySearch::classify( const Image& img )
+Image HRSBinarySearch::classify( const Image& Image )
 {
   // calls the binarySearch_h helper function
-  return binarySearch_h( img, m_Bvector, 0, m_Bvector.size(), m_Bvector.size(),
-                         m_k );
+  return binarySearch_h( Image, m_Bvector, 0, m_Bvector.size(),
+                         m_Bvector.size() );
 }

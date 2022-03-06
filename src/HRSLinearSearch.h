@@ -7,7 +7,7 @@
 #define HRS_LINEAR_SEARCH_H
 
 #include "IHandwritingRecSys.h"
-#include "Vector.h"
+#include "VectorImage.h"
 
 // Here we use forward declaration instead of #include. Forward
 // declaration is a declaration of an identifier (type, variable, or
@@ -27,14 +27,14 @@ class Image;
 //------------------------------------------------------------------------
 
 class HRSLinearSearch : public IHandwritingRecSys {
- public:
+public:
   HRSLinearSearch();
 
-  void  train( const Vector<Image>& vec );
+  void  train( const VectorImage& vec );
   Image classify( const Image& img );
 
- private:
-  Vector<Image> m_Lvector;
+private:
+  VectorImage m_Ivector;
 };
 
 #endif

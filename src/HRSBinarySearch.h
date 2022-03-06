@@ -7,8 +7,7 @@
 #define HRS_BINARY_SEARCH_H
 
 #include "IHandwritingRecSys.h"
-#include "Vector.h"
-
+#include "VectorImage.h"
 // Here we use forward declaration instead of #include. Forward
 // declaration is a declaration of an identifier (type, variable, or
 // class) before giving a complete definition.
@@ -27,15 +26,14 @@ class Image;
 //------------------------------------------------------------------------
 
 class HRSBinarySearch : public IHandwritingRecSys {
- public:
-  HRSBinarySearch( unsigned int K = 1000 );
+public:
+  HRSBinarySearch();
 
-  void  train( const Vector<Image>& vec );
+  void  train( const VectorImage& vec );
   Image classify( const Image& img );
 
- private:
-  Vector<Image> m_Bvector;
-  int           m_k;
+private:
+  VectorImage m_Bvector;
 };
 
 #endif

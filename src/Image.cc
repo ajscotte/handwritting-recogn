@@ -4,38 +4,18 @@
 // Implementations for Image.
 
 #include "Image.h"
+#include "VectorByte.h"
 #include "ece2400-stdlib.h"
-#include <iostream>
-
-//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 //------------------------------------------------------------------------
-// Image::print_pixel
-//------------------------------------------------------------------------
-// A helper function that prints a grayscale pixel using unicode based on
-// the integer value.
-void print_pixel( int v )
-{
-  if ( v <= 0 )
-    std::cout << "  ";
-  else if ( 0 < v && v <= 64 )
-    std::cout << "\u2591\u2591";
-  else if ( 64 < v && v <= 128 )
-    std::cout << "\u2592\u2592";
-  else if ( 128 < v && v <= 192 )
-    std::cout << "\u2593\u2593";
-  else
-    std::cout << "\u2588\u2588";
-}
-
-//------------------------------------------------------------------------
-// Image::distance_euclidean
+// distance
 //------------------------------------------------------------------------
 // A helper function that calculates the Euclidean distance between two
 // images.
 // Throws an ece2400::InvalidArgument exception if dimension of a doesn't
 // match that of b.
-size_t distance_euclidean( const Image& a, const Image& b )
+
+uint_t distance( const Image& a, const Image& b )
 {
   // tests to see if Images have the same dimensions
   if ( ( a.get_ncols() != b.get_ncols() ) ||
@@ -51,10 +31,26 @@ size_t distance_euclidean( const Image& a, const Image& b )
 
   return distance_h;
 }
+//------------------------------------------------------------------------
+// print_pixel
+//------------------------------------------------------------------------
+// A helper function that prints a grayscale pixel using unicode based on
+// the integer value.
 
-//------------------------------------------------------------------------
-// Image::at
-//------------------------------------------------------------------------
+void print_pixel( int v )
+{
+  if ( v <= 0 )
+    std::printf( "%s", "  " );
+  else if ( 0 < v && v <= 64 )
+    std::printf( "%s", "\u2591\u2591" );
+  else if ( 64 < v && v <= 128 )
+    std::printf( "%s", "\u2592\u2592" );
+  else if ( 128 < v && v <= 192 )
+    std::printf( "%s", "\u2593\u2593" );
+  else
+    std::printf( "%s", "\u2588\u2588" );
+}
+
 // returns the the value of the pixel at the x-th column and y-th row-Alex
 int Image::at( size_t x, size_t y ) const
 {
@@ -87,8 +83,6 @@ int Image::get_intensity() const
   // returns private member variable
   return m_intensity;
 }
-
-
 //------------------------------------------------------------------------
 // Image::print
 //------------------------------------------------------------------------
@@ -97,8 +91,6 @@ int Image::get_intensity() const
 void Image::print() const
 {
 }
-
-
 //------------------------------------------------------------------------
 // Image::operator==
 //------------------------------------------------------------------------
@@ -122,34 +114,7 @@ bool Image::operator==( const Image& rhs ) const
   return true;
 }
 
-//------------------------------------------------------------------------
-// Image::operator!=
-//------------------------------------------------------------------------
 // Overload the equal-to operator so that it compares the value of each pixel.
 // Return false only if the each pixel in the right-hand-side image is the same
 // as that in the current image. If the dimensions of the two images do not
-// match, simply return true. Return false if both images are empty.
-bool Image::operator!=( const Image& rhs ) const
-{
-  // oposite of operator= function
-  return !operator==( rhs );
-}
-
-size_t hash_intensity( const Image& a )
-{
-  return a.get_intensity();
-}
-
-//------------------------------------------------------------------------
-// Image::less_intensity
-//------------------------------------------------------------------------
-// returns true if the intensity of a is less than the intensity of b
-bool less_intensity( const Image& a, const Image& b )
-{
-  if ( a.get_intensity() < b.get_intensity() ) {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
+// match, simply return true. Return false if both images are empty.-Alex

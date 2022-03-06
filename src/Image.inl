@@ -1,23 +1,9 @@
 //========================================================================
 // Image.inl
 //========================================================================
-// Implementations for inline functions for Image. This is for
-// optimization purpose only. It is fine to leave this file empty.
-
 
 //------------------------------------------------------------------------
-// Image::operator[]
-//------------------------------------------------------------------------
-// Overload the subscript operator. returns the pixel at the given
-// index idx of the image without any boundary check and type converts to int.
-// template<typename T>
-inline int Image::operator[]( size_t idx ) const
-{
-  return m_vector[idx];
-}
-
-//------------------------------------------------------------------------
-// Image::Image()
+// Image::Image
 //------------------------------------------------------------------------
 // Default consructor that initializes all private member fields
 inline Image::Image()
@@ -34,7 +20,7 @@ inline Image::Image()
 //------------------------------------------------------------------------
 // Non-Default consructor that initializes all private member fields with known
 // variables
-inline Image::Image( const Vector<int>& vec, size_t ncols, size_t nrows )
+inline Image::Image( const VectorInt& vec, size_t ncols, size_t nrows )
 {
   // checks for errors
   if ( ncols >= 128 )
@@ -47,10 +33,7 @@ inline Image::Image( const Vector<int>& vec, size_t ncols, size_t nrows )
     throw ece2400::InvalidArgument(
         "The size of the vector does not match the number of rows times the number of columns." );
   // converting from VectorInt to VectorByte
-  // m_vector = vec;
-  for ( size_t i = 0; i < ncols * nrows; i++ ) {
-    m_vector.push_back( (unsigned char) vec[i] );
-  }
+  m_vector = vec;
   // initializes private member variables
   m_cols      = ncols;
   m_rows      = nrows;
@@ -80,7 +63,7 @@ inline size_t Image::get_nrows() const
 // Image::set_label
 //------------------------------------------------------------------------
 // mutator method for m_label private variable
-inline void Image::set_label( char label )
+inline void Image::set_label( const char& label )
 {
   // change label value
   m_label = label;
@@ -93,4 +76,26 @@ inline void Image::set_label( char label )
 inline char Image::get_label() const
 {
   return m_label;
+}
+//------------------------------------------------------------------------
+// Image::operator[]
+//------------------------------------------------------------------------
+// Overload the subscript operator. returns the pixel at the given
+// index idx of the image without any boundary check and type converts to int.
+inline int Image::operator[]( size_t idx ) const
+{
+  // type converts to int from unsigned char
+  return (int) m_vector[idx];
+}
+//------------------------------------------------------------------------
+// Image::operator!=
+//------------------------------------------------------------------------
+// Overload the equal-to operator so that it compares the value of each pixel.
+// Return false only if the each pixel in the right-hand-side image is the same
+// as that in the current image. If the dimensions of the two images do not
+// match, simply return true. Return false if both images are empty.
+bool Image::operator!=( const Image& rhs ) const
+{
+  // oposite of operator= function
+  return !operator==( rhs );
 }

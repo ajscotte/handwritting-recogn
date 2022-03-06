@@ -9,7 +9,7 @@
 #include "mnist-utils.h"
 #include "IHandwritingRecSys.h"
 #include "Image.h"
-#include "Vector.h"
+#include "VectorInt.h"
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -29,11 +29,11 @@ const char* cursor_e = "\033[K";  // Erase to end of the line
 //------------------------------------------------------------------------
 // read_labeled_images
 //------------------------------------------------------------------------
-// Reads the images and labels file and fills a Vector<Image> with the
+// Reads the images and labels file and fills a VectorImage with the
 // corresponding labeled images.
 
 void read_labeled_images( const std::string& images_path,
-                          const std::string& labels_path, Vector<Image>& vec,
+                          const std::string& labels_path, VectorImage& vec,
                           size_t size )
 {
   std::ifstream myifs;
@@ -46,7 +46,7 @@ void read_labeled_images( const std::string& images_path,
   // Read images
   //----------------------------------------------------------------------
 
-  Image* labeled_images = new Image[size];
+  Image* labeled_imgaes = new Image[size];
   int*   data           = new int[mnist_size];
 
   // Open binary file
@@ -72,8 +72,8 @@ void read_labeled_images( const std::string& images_path,
 
     // Add this image to the array
 
-    labeled_images[idx] =
-        Image( Vector<int>( data, mnist_size ), mnist_ncols, mnist_nrows );
+    labeled_imgaes[idx] =
+        Image( VectorInt( data, mnist_size ), mnist_ncols, mnist_nrows );
   }
 
   // Close file
@@ -104,21 +104,21 @@ void read_labeled_images( const std::string& images_path,
     char label_char = '0' + tmp;
 
     // Set label for the corresponding image
-    labeled_images[idx].set_label( label_char );
+    labeled_imgaes[idx].set_label( label_char );
   }
 
   //----------------------------------------------------------------------
   // Copy to the image vector
   //----------------------------------------------------------------------
 
-  vec = Vector<Image>();  // Clear the data
+  vec = VectorImage();  // Clear the data
   for ( size_t i = 0; i < size; i++ )
-    vec.push_back( labeled_images[i] );
+    vec.push_back( labeled_imgaes[i] );
 
   // Clear dynamic memory
 
   delete[] data;
-  delete[] labeled_images;
+  delete[] labeled_imgaes;
 }
 
 //------------------------------------------------------------------------
@@ -129,8 +129,8 @@ void read_labeled_images( const std::string& images_path,
 // inference set, and then checks how many classifications are correct,
 // returning the accuracy as a double.
 
-double train_and_classify( IHandwritingRecSys& hrs, Vector<Image>& v_train,
-                           Vector<Image>& v_test )
+double train_and_classify( IHandwritingRecSys& hrs, VectorImage& v_train,
+                           VectorImage& v_test )
 {
   // Return 0 if testing set is empty
 
@@ -147,14 +147,8 @@ double train_and_classify( IHandwritingRecSys& hrs, Vector<Image>& v_train,
   size_t total   = v_test.size();
 
   for ( size_t i = 0; i < total; i++ ) {
-    // Get classification result
-
-    Image clf_result = hrs.classify( v_test[i] );
-
-    bool isInputReturned = clf_result == v_test[i];
-
-    char predicted = clf_result.get_label();
-    if ( !isInputReturned && predicted == v_test[i].get_label() )
+    // Check predicted results
+    if ( hrs.classify( v_test[i] ).get_label() == v_test[i].get_label() )
       correct++;
 
     // Prints out the number of correct predictions per 1000 images
@@ -177,7 +171,7 @@ double train_and_classify( IHandwritingRecSys& hrs, Vector<Image>& v_train,
 // testing set and prints a progress bar, and returns the accuracy.
 
 double classify_with_progress_bar( IHandwritingRecSys& hrs,
-                                   Vector<Image>&      v_test )
+                                   VectorImage&        v_test )
 {
   // Return 0 if testing set is empty to avoid devide by 0
 
@@ -197,7 +191,6 @@ double classify_with_progress_bar( IHandwritingRecSys& hrs,
 
   for ( size_t i = 0; i < test_size; i++ ) {
     // Get classification result
-
     Image clf_result = hrs.classify( v_test[i] );
 
     bool isInputReturned = clf_result == v_test[i];
@@ -224,7 +217,7 @@ double classify_with_progress_bar( IHandwritingRecSys& hrs,
       std::cout << cursor_e;
       std::cout << std::endl;
 
-      std::cout << " - classifying image " << i << " of " << test_size;
+      std::cout << " - classifying image " << i + 1 << " of " << test_size;
       std::cout << cursor_e;
       std::cout << std::endl;
 

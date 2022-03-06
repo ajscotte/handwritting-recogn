@@ -15,6 +15,20 @@
 const double ece2400::million = 1000000.0;
 
 //------------------------------------------------------------------------
+// distance
+//------------------------------------------------------------------------
+// Return the distance between the two given integers. This function is
+// available in the global namespace.
+
+uint_t distance( int a, int b )
+{
+  if ( a > b )
+    return a - b;
+  else
+    return b - a;
+}
+
+//------------------------------------------------------------------------
 // Check-macro variables
 //------------------------------------------------------------------------
 
@@ -77,22 +91,6 @@ ece2400::InvalidArgument::InvalidArgument( const char* err_msg )
 std::string ece2400::InvalidArgument::to_str() const
 {
   return m_err_msg;
-}
-
-//------------------------------------------------------------------------
-// log2
-//------------------------------------------------------------------------
-// To find log2(x) we can just repeatedly do (( x/2 ) / 2 ) / 2 until the
-// result is zero.
-
-int ece2400::log2( int x )
-{
-  int result = 0;
-  while ( x > 1 ) {
-    x = x / 2;
-    result++;
-  }
-  return result;
 }
 
 //------------------------------------------------------------------------
